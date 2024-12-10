@@ -19,14 +19,14 @@ public class RegisterRequest {
     @Size(max = 32)
     private String lastName;
 
-    @NotBlank
-    @Size(max = 64)
-    private String email;
-
     @Email(
             regexp = EmailRegex.EXPRESSION,
             message = "email format is not valid"
     )
+    @NotBlank
+    @Size(max = 64)
+    private String email;
+    
     @NotBlank
     @Size(max = 64)
     private String password;

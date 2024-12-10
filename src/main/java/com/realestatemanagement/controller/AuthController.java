@@ -49,7 +49,7 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public void forgotPassword(@Valid @RequestBody EmailRequest request) {
-        service.resendConfirmationEmail(request);
+        service.sendEmailResetPassword(request);
     }
 
     @PatchMapping("/reset-password")

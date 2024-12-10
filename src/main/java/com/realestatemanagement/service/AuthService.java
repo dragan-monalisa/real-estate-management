@@ -68,13 +68,13 @@ public class AuthService {
         jwtTokenService.saveJwtToken(user, jwtToken);
         sendConfirmationEmail(user);
     }
-    //--
+
     public LoginResponse login(LoginRequest request) {
         String email = request.getEmail();
         var user = userRepository.getOptionalByEmail(email).orElseThrow(
                 () -> new BusinessException("Invalid email or password"));
 
-        if(!user.isEnabled()) {
+        if (!user.isEnabled()) {
             throw new BusinessException("Account activation is required before login");
         }
 
@@ -85,7 +85,7 @@ public class AuthService {
                             request.getPassword()
                     )
             );
-        } catch(AuthenticationException e) {
+        } catch (AuthenticationException e) {
             throw new BusinessException("Invalid email or password");
         }
 
@@ -94,7 +94,6 @@ public class AuthService {
 
         jwtTokenService.revokeAllUserJwtTokens(user);
         jwtTokenService.saveJwtToken(user, accesToken);
-        //----refresh?
 
         return new LoginResponse(accesToken, refreshToken);
     }
@@ -102,7 +101,7 @@ public class AuthService {
     @Transactional
     public void confirmAccount(String token) {
         var uuidToken = uuidTokenRepository.getByToken(token);
-        uuidToken.setExpiresAt(LocalDateTime.now());//----
+        uuidToken.setExpiresAt(LocalDateTime.now());
 
         userRepository.enableUser(uuidToken.getUser().getId());
     }
@@ -110,12 +109,12 @@ public class AuthService {
     public void resendConfirmationEmail(EmailRequest request) {
         var user = userRepository.findUnconfirmedUser(request.getEmail());
 
-        if(user.isEmpty())
+        if (user.isEmpty())
             return;
 
         List<UuidToken> tokens = uuidTokenRepository.findAllByUser(user.get());
 
-        if(!tokens.isEmpty()) {
+        if (!tokens.isEmpty()) {
             throw new BusinessException("A confirmation email was already sent");
         }
 
@@ -130,7 +129,7 @@ public class AuthService {
         }
 
         String refreshToken = authHeader.substring(7);
-        String email = jwtService.extractUsername(refreshToken);//----
+        String email = jwtService.extractUsername(refreshToken);
 
         if (email != null) {
             var user = userRepository.getByEmail(email);

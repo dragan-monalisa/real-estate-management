@@ -26,7 +26,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 //controllers
+                                "/api/v1/auth/register",
                                 "/api/v1/**"
+
+                                //openapi
                         )
                         .permitAll()
                         .anyRequest()
