@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+class CorsConfig implements WebMvcConfigurer {
 
     @Value("${cors.allowed-origins}")
     private String[] allowedOrigins;
@@ -32,4 +32,5 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowCredentials(allowCredentials)
                 .maxAge(maxAge);
     }
+
 }

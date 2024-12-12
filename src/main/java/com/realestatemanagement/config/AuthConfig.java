@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class AuthConfig {
+class AuthConfig {
 
     private final UserRepository userRepository;
 
@@ -30,4 +30,5 @@ public class AuthConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-public class DataSourceConfig {
+class DataSourceConfig {
 
     @Value("${spring.datasource.url}")
     private String url;
@@ -40,4 +40,5 @@ public class DataSourceConfig {
 
         return new HikariDataSource(config);
     }
+    
 }
