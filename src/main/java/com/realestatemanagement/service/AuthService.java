@@ -89,13 +89,13 @@ public class AuthService {
             throw new BusinessException("Invalid email or password");
         }
 
-        String accesToken = jwtService.generateToken(user);
+        String accessToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
         jwtTokenService.revokeAllUserJwtTokens(user);
-        jwtTokenService.saveJwtToken(user, accesToken);
+        jwtTokenService.saveJwtToken(user, accessToken);
 
-        return new LoginResponse(accesToken, refreshToken);
+        return new LoginResponse(accessToken, refreshToken);
     }
 
     @Transactional

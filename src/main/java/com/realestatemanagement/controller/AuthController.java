@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     private final AuthService service;
@@ -32,7 +32,7 @@ public class AuthController {
         return service.login(request);
     }
 
-    @GetMapping("confirm-account")
+    @GetMapping("/confirm-account")
     public void confirmAccount(@RequestParam String token) {
         service.confirmAccount(token);
     }
@@ -57,4 +57,5 @@ public class AuthController {
                               @Valid @RequestBody ResetPasswordRequest request) {
         service.resetPassword(token, request);
     }
+
 }

@@ -10,4 +10,5 @@ public class EmailRequest {
     @NotBlank
     @Size(max = 64)
     private String email;
+
 }

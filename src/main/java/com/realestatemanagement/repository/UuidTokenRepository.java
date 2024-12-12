@@ -18,4 +18,5 @@ public interface UuidTokenRepository extends JpaRepository<UuidToken, Long> {
     }
 
     List<UuidToken> findAllByUser(User user);
+
 }

@@ -3,15 +3,12 @@ package com.realestatemanagement.repository;
 import com.realestatemanagement.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-//@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
@@ -20,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmailAndIsEnabledTrueAndIsLockedFalse(String email);
 
-    default Optional<User> getOptionalByEmail(String email){
+    default Optional<User> getOptionalByEmail(String email) {
         return findByEmailAndIsLockedFalse(email);
     }
 
