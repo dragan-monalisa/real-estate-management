@@ -1,32 +1,23 @@
 package com.realestatemanagement.entity;
 
 import com.realestatemanagement.constant.PropertyCategoryEnum;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import lombok.Getter;
+import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@SQLRestriction("is_active <> false")
-@SQLDelete(sql = "UPDATE hs.property SET is_active = false WHERE id = ?")
-@Table(schema = "hs", name = "property")
-public class Property {
+@MappedSuperclass
+public abstract class Property {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Builder.Default
+    @NotNull
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
+    private boolean isActive;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -34,34 +25,13 @@ public class Property {
     private PropertyCategoryEnum category;
 
     @NotNull
-    @Min(1)
-    @Column(name = "area", nullable = false)
-    private Integer area;
+    @Min(0)
+    @Column(name = "usable_area", nullable = false)
+    private int usableArea;
 
-    @Column(name = "build_year")
-    private Integer buildYear;
+    public Property() {
+        isActive = true;
+        category = PropertyCategoryEnum.UNDEFINED;
+    }
 
-    @Column(name = "floors_number")
-    private Integer floorsNumber;
-
-    @Column(name = "rooms_number")
-    private Integer roomsNumber;
-
-    @Column(name = "partitioning")
-    private String partitioning;
-
-    // relationships
-    @ManyToOne
-    @JoinColumn(
-            nullable = false,
-            name = "user_id"
-    )
-    private User user;
-
-    @OneToOne
-    @JoinColumn(
-            nullable = false,
-            name = "address_id"
-    )
-    private Address address;
 }
