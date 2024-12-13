@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Hidden
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class ControllerAdvice {
+public class RestExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
