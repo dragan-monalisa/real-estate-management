@@ -92,7 +92,6 @@ public class UserRepositoryTest {
         LocalDateTime updatedAt = user.getUpdatedAt();
 
         userRepository.enableUser(user.getId());
-
         entityManager.flush();
         entityManager.clear();
 
@@ -117,11 +116,9 @@ public class UserRepositoryTest {
         assertThat(user.getPassword()).isEqualTo("test");
 
         LocalDateTime updatedAt = user.getUpdatedAt();
-
         String newPassword = "newPassword";
 
         userRepository.changePassword(validUser.getEmail(), newPassword);
-
         entityManager.flush();
         entityManager.clear();
 

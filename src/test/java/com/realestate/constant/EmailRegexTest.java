@@ -23,6 +23,7 @@ public class EmailRegexTest {
         assertThat(EMAIL_PATTERN.matcher("user-@example.org").matches()).isTrue();
     }
 
+
     @Test
     void invalidEmailsTest() {
         assertThat(EMAIL_PATTERN.matcher("user-@example-org").matches()).isFalse();

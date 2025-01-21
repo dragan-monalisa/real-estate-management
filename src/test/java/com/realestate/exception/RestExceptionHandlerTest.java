@@ -27,7 +27,7 @@ public class RestExceptionHandlerTest {
     private RestExceptionHandler restExceptionHandler;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         restExceptionHandler = new RestExceptionHandler();
     }
 

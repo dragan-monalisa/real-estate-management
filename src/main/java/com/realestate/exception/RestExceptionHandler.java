@@ -1,6 +1,5 @@
 package com.realestate.exception;
 
-
 import com.realestate.component.ConstraintValidator;
 import com.realestate.dto.ErrorDto;
 import com.realestate.dto.ValidationDto;

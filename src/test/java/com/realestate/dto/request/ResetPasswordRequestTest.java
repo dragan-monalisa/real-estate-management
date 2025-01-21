@@ -50,5 +50,4 @@ public class ResetPasswordRequestTest {
         assertThat(violations).extracting(ConstraintViolation::getMessage).contains("size must be between 0 and 64");
     }
 
-
 }

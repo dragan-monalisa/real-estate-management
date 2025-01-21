@@ -13,7 +13,7 @@ public class EmailBuilderTest {
     private final String link = "https://example.com/test";
 
     @BeforeEach
-    public void setUp() {
+    public void setup() {
         emailBuilder = new EmailBuilder();
     }
 
@@ -24,7 +24,6 @@ public class EmailBuilderTest {
         assertThat(email).contains(name);
         assertThat(email).contains(link);
         assertThat(email).contains("Confirm your email");
-
     }
 
     @Test
