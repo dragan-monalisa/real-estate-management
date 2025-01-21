@@ -1,5 +1,6 @@
 package com.realestate.repository;
 
+import com.realestate.constant.UserRoleEnum;
 import com.realestate.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,12 +8,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
+
+    List<User> getUserByRole(UserRoleEnum realtor);
 
     Optional<User> findByEmailAndIsEnabledTrueAndIsLockedFalse(String email);
 
