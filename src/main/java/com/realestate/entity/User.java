@@ -23,7 +23,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(schema = "hs", name = "user")
+@Table(schema = "hs", name = "app_user")
 public class User implements UserDetails {
 
     @Id

@@ -32,7 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User " +
             "SET password = :password, updatedAt = CURRENT_TIMESTAMP " +
-            "WHERE email = : email")
+            "WHERE email = :email")
     void changePassword(String email, String password);
 
     default User getByEmail(String email) {
