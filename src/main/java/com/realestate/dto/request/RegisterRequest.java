@@ -1,0 +1,34 @@
+package com.realestate.dto.request;
+
+import com.realestate.constant.EmailRegex;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class RegisterRequest {
+
+    @NotBlank
+    @Size(max = 32)
+    private String firstName;
+
+    @NotBlank
+    @Size(max = 32)
+    private String lastName;
+
+    @Email(
+            regexp = EmailRegex.EXPRESSION,
+            message = "email format is not valid"
+    )
+    @NotBlank
+    @Size(max = 64)
+    private String email;
+
+    @NotBlank
+    @Size(max = 64)
+    private String password;
+
+}
