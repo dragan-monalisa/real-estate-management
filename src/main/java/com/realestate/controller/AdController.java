@@ -36,7 +36,6 @@ public class AdController {
                     responseCode = "404",
                     description = "Property not found",
                     content = @Content(schema = @Schema(implementation = Error.class))
-
             )
     })
     @ResponseStatus(HttpStatus.CREATED)
