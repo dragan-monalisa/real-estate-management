@@ -142,5 +142,12 @@ public class EmailBuilder {
                 "\n" +
                 "</div></div>";
     }
+
+    public String transactionEmail() {
+        return "<h2>Transaction Confirmation</h2>" +
+                "<p>Dear Realtor,</p>" +
+                "<p>Thank you for processing the transaction. We are pleased to inform you that the transaction has been successfully completed.</p>" +
+                "<p>Best regards,<br>HomeStor Team</p>";
+    }
     
 }

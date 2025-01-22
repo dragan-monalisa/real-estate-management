@@ -3,6 +3,7 @@ package com.realestate.service;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -35,6 +36,24 @@ public class EmailService {
 
         } catch (Exception e) {
             log.error("Failed to send email due to technical errors: {}", e.getMessage());
+        }
+    }
+
+    public void sendWithAttachment(String to, String emailBody, byte[] pdf, String fileName) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            var helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+
+            helper.setFrom("no-reply@homestor.com");
+            helper.setTo(to);
+            helper.setSubject("no-reply: homestor");
+            helper.setText(emailBody, true);
+            helper.addAttachment(fileName, new ByteArrayResource(pdf));
+
+            mailSender.send(mimeMessage);
+
+        } catch (Exception e) {
+            log.error("Failed to send email with attachment due to technical errors: {}", e.getMessage());
         }
     }
 
