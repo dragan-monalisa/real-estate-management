@@ -10,5 +10,6 @@
     <include file="homestor-script.sql" relativeToChangelogFile="true"/>
     <include file="add_column_app_user_table.xml" relativeToChangelogFile="true"/>
     <include file="drop_column_user_table.xml" relativeToChangelogFile="true"/>
+    <include file="add_test_column_app_user_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
