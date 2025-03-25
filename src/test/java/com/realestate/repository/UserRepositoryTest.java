@@ -65,18 +65,21 @@ public class UserRepositoryTest {
 
     @Test
     void existByEmailTest() {
+        // when
         boolean exists = userRepository.existsByEmail(validUser.getEmail());
 
+        // then
         assertThat(exists).isTrue();
     }
 
     @Test
     void findByEmailAndIsEnabledTrueAndIsLockedFalseTest() {
-        var email = validUser.getEmail();
-        Optional<User> optionalUser = userRepository.findByEmailAndIsEnabledTrueAndIsLockedFalse(email);
+        // when
+        Optional<User> optionalUser = userRepository.findByEmailAndIsEnabledTrueAndIsLockedFalse(validUser.getEmail());
 
+        // then
         assertThat(optionalUser).isPresent();
-        assertThat(optionalUser.get().getEmail()).isEqualTo(email);
+        assertThat(optionalUser.get().getEmail()).isEqualTo(validUser.getEmail());
     }
 
     @Test
@@ -133,16 +136,20 @@ public class UserRepositoryTest {
 
     @Test
     void getByEmailTest() {
+        // when
         Throwable thrown = catchThrowable(() -> userRepository.getByEmail("random"));
 
+        // then
         assertThat(thrown).isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("User with email random not found");
     }
 
     @Test
     void getUnconfirmedUserTest() {
+        // when
         Throwable thrown = catchThrowable(() -> userRepository.getByEmail(disabledUser.getEmail()));
 
+        // then
         assertThat(thrown).isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("User with email " + disabledUser.getEmail() + " not found");
     }

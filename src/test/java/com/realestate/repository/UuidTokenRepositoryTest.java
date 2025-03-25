@@ -62,22 +62,28 @@ public class UuidTokenRepositoryTest {
 
     @Test
     void findByTokenTest() {
+        // when
         Optional<UuidToken> uuidToken = uuidTokenRepository.findByToken(validUuidToken.getToken());
 
+        // then
         assertThat(uuidToken).isPresent();
     }
 
     @Test
     void findAllByUserTest() {
+        // when
         List<UuidToken> tokens = uuidTokenRepository.findAllByUser(user);
 
+        // then
         assertThat(tokens.size()).isEqualTo(1);
     }
 
     @Test
     void getByTokenTest() {
+        // when
         Throwable thrown = catchThrowable(() -> uuidTokenRepository.getByToken(invavalidUuidToken.getToken()));
 
+        // then
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("No valid token found");

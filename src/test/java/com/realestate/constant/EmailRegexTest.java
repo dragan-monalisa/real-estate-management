@@ -11,7 +11,7 @@ public class EmailRegexTest {
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EmailRegex.EXPRESSION, Pattern.CASE_INSENSITIVE);
 
     @Test
-    void validEmailsTest() {
+    void validEmailsTest_OK() {
         assertThat(EMAIL_PATTERN.matcher("name@example.com").matches()).isTrue();
         assertThat(EMAIL_PATTERN.matcher("firstname.lastname@example.com").matches()).isTrue();
         assertThat(EMAIL_PATTERN.matcher("firstname-lastname@example.com").matches()).isTrue();
@@ -23,9 +23,8 @@ public class EmailRegexTest {
         assertThat(EMAIL_PATTERN.matcher("user-@example.org").matches()).isTrue();
     }
 
-
     @Test
-    void invalidEmailsTest() {
+    void invalidEmailsTest_InvalidEmails() {
         assertThat(EMAIL_PATTERN.matcher("user-@example-org").matches()).isFalse();
         assertThat(EMAIL_PATTERN.matcher("username").matches()).isFalse();
         assertThat(EMAIL_PATTERN.matcher("@missingusername.com").matches()).isFalse();

@@ -24,7 +24,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class JwtAuthFilterTest {
+class JwtAuthFilterTest {
+
+    @InjectMocks
+    private JwtAuthFilter jwtAuthFilter;
 
     @Mock
     private JwtService jwtService;
@@ -44,11 +47,7 @@ public class JwtAuthFilterTest {
     @Mock
     private UserDetails userDetails;
 
-    @InjectMocks
-    private JwtAuthFilter jwtAuthFilter;
-
     private final String jwt = "random_jwt";
-    private final String email = "test@email.com";
 
     @BeforeEach
     void setup() {
@@ -56,11 +55,14 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void doFilterInternalNoAuthHeaderTest() throws ServletException, IOException {
+    void doFilterInternalTest_NoAuthHeader() throws ServletException, IOException {
+        // given
         when(request.getHeader("Authorization")).thenReturn(null);
 
+        // when
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
+        // then
         verify(jwtService, never()).extractUsername(any());
         verify(filterChain).doFilter(request, response);
 
@@ -68,11 +70,14 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void doFilterInternalInvalidAuthHeaderTest() throws ServletException, IOException {
+    void doFilterInternalTest_InvalidAuthHeader() throws ServletException, IOException {
+        // given
         when(request.getHeader("Authorization")).thenReturn("invalid_header");
 
+        // when
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
+        // then
         verify(jwtService, never()).extractUsername(any());
         verify(filterChain).doFilter(request, response);
 
@@ -80,16 +85,19 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void doFilterInternalValidTokenAuthenticationSetTest() throws ServletException, IOException {
+    void doFilterInternalTest_ValidTokenAuthenticationSet() throws ServletException, IOException {
+        // given
         when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
-        when(jwtService.extractUsername(jwt)).thenReturn(email);
-        when(userDetailsService.loadUserByUsername(email)).thenReturn(userDetails);
+        when(jwtService.extractUsername(jwt)).thenReturn("test@email.com");
+        when(userDetailsService.loadUserByUsername("test@email.com")).thenReturn(userDetails);
         when(jwtService.isTokenValid(jwt, userDetails)).thenReturn(true);
 
+        // when
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
+        // then
         verify(jwtService).extractUsername(jwt);
-        verify(userDetailsService).loadUserByUsername(email);
+        verify(userDetailsService).loadUserByUsername("test@email.com");
         verify(jwtService).isTokenValid(jwt, userDetails);
         verify(filterChain).doFilter(request, response);
 
@@ -103,16 +111,19 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void doFilterInternalValidTokenInvalidAuthenticationTest() throws ServletException, IOException {
+    void doFilterInternalTest_ValidTokenInvalidAuthentication() throws ServletException, IOException {
+        // given
         when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
-        when(jwtService.extractUsername(jwt)).thenReturn(email);
-        when(userDetailsService.loadUserByUsername(email)).thenReturn(userDetails);
+        when(jwtService.extractUsername(jwt)).thenReturn("test@email.com");
+        when(userDetailsService.loadUserByUsername("test@email.com")).thenReturn(userDetails);
         when(jwtService.isTokenValid(jwt, userDetails)).thenReturn(false);
 
+        // when
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
+        // then
         verify(jwtService).extractUsername(jwt);
-        verify(userDetailsService).loadUserByUsername(email);
+        verify(userDetailsService).loadUserByUsername("test@email.com");
         verify(jwtService).isTokenValid(jwt, userDetails);
         verify(filterChain).doFilter(request, response);
 

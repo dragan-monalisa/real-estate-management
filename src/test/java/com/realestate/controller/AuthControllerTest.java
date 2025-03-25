@@ -41,24 +41,27 @@ public class AuthControllerTest {
     private AuthService authService;
 
     @MockBean
-    JwtService jwtService;
+    private JwtService jwtService;
 
     @MockBean
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     private static final String PATH = "/api/v1/auth";
 
     @Test
     void registerTest() throws Exception {
-        RegisterRequest request = new RegisterRequest();
+        // given
+        var request = new RegisterRequest();
 
         request.setFirstName("FirstName");
         request.setLastName("LastName");
         request.setEmail("test@example.com");
         request.setPassword("test");
 
+        // when
         doNothing().when(authService).register(any(RegisterRequest.class));
 
+        // then
         mockMvc.perform(post(PATH + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -67,28 +70,35 @@ public class AuthControllerTest {
 
     @Test
     void loginTest() throws Exception {
+        // given
         LoginRequest request = new LoginRequest();
+
         request.setEmail("test@example.com");
         request.setPassword("password");
 
-        LoginResponse expectedResponse = new LoginResponse("accessToken", "refreshToken");
+        LoginResponse expectedResponse = new LoginResponse("access-token", "refresh-token");
 
+        // when
         when(authService.login(any(LoginRequest.class))).thenReturn(expectedResponse);
 
+        // then
         mockMvc.perform(post(PATH + "/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").value("accessToken"))
-                .andExpect(jsonPath("$.refreshToken").value("refreshToken"));
+                .andExpect(jsonPath("$.accessToken").value("access-token"))
+                .andExpect(jsonPath("$.refreshToken").value("refresh-token"));
     }
 
     @Test
     void confirmAccountTest() throws Exception {
+        // given
         String token = UUID.randomUUID().toString();
 
+        // when
         doNothing().when(authService).confirmAccount(anyString());
 
+        // then
         mockMvc.perform(get(PATH + "/confirm-account")
                 .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -97,11 +107,14 @@ public class AuthControllerTest {
 
     @Test
     void resendConfirmationEmailTest() throws Exception {
+        // given
         EmailRequest request = new EmailRequest();
         request.setEmail("test@example.com");
 
-        doNothing().when(authService).resendConfirmationEmail(any(EmailRequest.class));
+        // when
+        doNothing().when(authService).resendConfirmationEmail(request);
 
+        // then
         mockMvc.perform(post(PATH + "/resend-confirmation-email")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
