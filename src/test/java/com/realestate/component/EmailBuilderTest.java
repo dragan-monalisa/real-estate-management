@@ -15,7 +15,7 @@ class EmailBuilderTest {
         String result = emailBuilder.confirmationEmail("Alice Smith", "https://example.com/test");
 
         // then
-        assertThat(result).contains("Alice Smith", "https://example.com/test", "Confirm your result");
+        assertThat(result).contains("Alice Smith", "https://example.com/test", "Confirm your email");
     }
 
     @Test
