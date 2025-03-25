@@ -6,7 +6,6 @@ import com.realestate.dto.ValidationDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
@@ -24,64 +23,70 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class RestExceptionHandlerTest {
 
-    private RestExceptionHandler restExceptionHandler;
-
-    @BeforeEach
-    void setup() {
-        restExceptionHandler = new RestExceptionHandler();
-    }
+    private final RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
 
     @Test
     void handleEntityNotFoundException() {
-        String message = "Entity not found";
-        EntityNotFoundException exception = new EntityNotFoundException(message);
+        // given
+        EntityNotFoundException exception = new EntityNotFoundException("error");
 
+        // when
         ErrorDto response = restExceptionHandler.handle(exception);
 
-        assertEquals(message, response.message());
+        // then
+        assertEquals("error", response.message());
         assertNotNull(response.timestamp());
     }
 
     @Test
     void handleResourceConflictException() {
-        String message = "Resource conflict";
-        ResourceConflictException exception = new ResourceConflictException(message);
+        // given
+        ResourceConflictException exception = new ResourceConflictException("error");
 
+        // when
         ErrorDto response = restExceptionHandler.handle(exception);
 
-        assertEquals(message, response.message());
+        // then
+        assertEquals("error", response.message());
         assertNotNull(response.timestamp());
     }
 
     @Test
     void handleTechnicalAndBusinessExceptions() {
-        String message = "Technical error";
-        TechnicalException exception = new TechnicalException(message);
+        // given
+        TechnicalException exception = new TechnicalException("Technical error");
 
+        // when
         ErrorDto response = restExceptionHandler.handle(exception);
 
-        assertEquals(message, response.message());
+        // then
+        assertEquals("Technical error", response.message());
         assertNotNull(response.timestamp());
 
-        message = "Business error";
-        BusinessException businessException = new BusinessException(message);
+        // given
+        BusinessException businessException = new BusinessException("Business error");
 
+        // when
         response = restExceptionHandler.handle(businessException);
 
-        assertEquals(message, response.message());
+        // then
+        assertEquals("Business error", response.message());
         assertNotNull(response.timestamp());
     }
 
     @Test
     void handleMethodArgumentNotValidException() {
+        // given
         MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
 
+        // when
         when(exception.getBindingResult()).thenReturn(bindingResult);
 
         ValidationDto validationDto = new ValidationDto("field", "error message");
         List<ValidationDto> validationErrors = List.of(validationDto);
 
+        // then
         try (MockedStatic<ConstraintValidator> mockedStatic = mockStatic(ConstraintValidator.class)) {
             mockedStatic.when(() -> ConstraintValidator.buildErrors(bindingResult))
                     .thenReturn(validationErrors);
@@ -97,14 +102,17 @@ public class RestExceptionHandlerTest {
 
     @Test
     void handleConstraintViolationException() {
+        // given
         ConstraintViolationException exception = mock(ConstraintViolationException.class);
         ConstraintViolation<?> violation = mock(ConstraintViolation.class);
 
+        // when
         when(exception.getConstraintViolations()).thenReturn(Set.of(violation));
 
         ValidationDto validationDto = new ValidationDto("field", "error message");
         List<ValidationDto> validationErrors = List.of(validationDto);
 
+        // then
         try (MockedStatic<ConstraintValidator> mockedStatic = mockStatic(ConstraintValidator.class)) {
             mockedStatic.when(() -> ConstraintValidator.buildErrors(exception.getConstraintViolations()))
                     .thenReturn(validationErrors);
