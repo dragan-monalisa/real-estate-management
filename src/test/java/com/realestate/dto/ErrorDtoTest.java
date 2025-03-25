@@ -14,7 +14,7 @@ class ErrorDtoTest {
 
         // then
         assertThat(result.message()).isEqualTo("error");
-        assertThat(result.timestamp()).isNotNull();
+        assertThat(result.timestamp()).isNotBlank();
     }
 
 }
