@@ -21,21 +21,23 @@ class ConstraintValidatorTest {
 
     @Test
     void buildErrorsBindingResultTest() {
+
         // given
         var fieldError = new FieldError("name", "field", "error");
 
-        // when
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
+
+        // when
         List<ValidationDto> result = ConstraintValidator.buildErrors(bindingResult);
 
         // then
         assertThat(result).hasSize(1);
 
-        assertThat(result.getFirst()).satisfies(validationDto -> {
-            assertThat(validationDto.field()).isEqualTo("field");
-            assertThat(validationDto.message()).isEqualTo("error");
-            assertThat(validationDto.timestamp()).isNotNull();
+        assertThat(result.getFirst()).satisfies(validation -> {
+            assertThat(validation.field()).isEqualTo("field");
+            assertThat(validation.message()).isEqualTo("error");
+            assertThat(validation.timestamp()).isNotNull();
         });
     }
- 
+
 }
