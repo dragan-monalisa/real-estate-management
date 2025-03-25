@@ -23,38 +23,53 @@ public class RegisterRequestTest {
 
     @Test
     public void validRegisterRequestTest() {
+        // given
         RegisterRequest request = new RegisterRequest();
+
         request.setFirstName("Carolina");
         request.setLastName("Smith");
         request.setEmail("test@test.com");
         request.setPassword("password123456");
 
+        // when
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
+
+        // then
         assertThat(violations).hasSize(0);
     }
 
     @Test
     public void blankFieldsTest() {
+        // given
         RegisterRequest request = new RegisterRequest();
+
         request.setFirstName("");
         request.setLastName("");
         request.setEmail("");
         request.setPassword("");
-
+        
+        // when
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
+
+        // then
         assertThat(violations).hasSize(5);
         assertThat(violations).extracting(ConstraintViolation::getMessage).contains("must not be blank");
     }
 
     @Test
     public void fieldsExceedsMaxLengthTest() {
+        // given
         RegisterRequest request = new RegisterRequest();
+
         request.setFirstName("a".repeat(33));
         request.setLastName("a".repeat(33));
         request.setEmail("a".repeat(65));
         request.setPassword("a".repeat(65));
 
+        // when
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
+
+        // then
         assertThat(violations).hasSize(5);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
                 .contains("size must be between 0 and 32", "size must be between 0 and 64", "email format is not valid");
@@ -62,13 +77,18 @@ public class RegisterRequestTest {
 
     @Test
     public void invalidEmailFormatTest() {
+        // given
         RegisterRequest request = new RegisterRequest();
+
         request.setFirstName("Jessyca");
         request.setLastName("Doe");
         request.setEmail("invalid-email-format");
         request.setPassword("password123456");
 
+        // when
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
+
+        // then
         assertThat(violations).hasSize(1);
         assertThat(violations).extracting(ConstraintViolation::getMessage).contains("email format is not valid");
         assertThat(violations).extracting(violation -> violation.getPropertyPath().toString()).contains("email");
