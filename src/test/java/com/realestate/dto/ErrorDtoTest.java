@@ -8,6 +8,7 @@ class ErrorDtoTest {
 
     @Test
     void errorDtoWithMessageTest() {
+        
         // when
         ErrorDto error = new ErrorDto("error");
 
