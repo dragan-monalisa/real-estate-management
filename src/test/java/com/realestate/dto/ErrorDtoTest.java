@@ -8,13 +8,13 @@ class ErrorDtoTest {
 
     @Test
     void errorDtoWithMessageTest() {
-        
+
         // when
-        ErrorDto error = new ErrorDto("error");
+        ErrorDto result = new ErrorDto("error");
 
         // then
-        assertThat(error.message()).isEqualTo("error");
-        assertThat(error.timestamp()).isNotNull();
+        assertThat(result.message()).isEqualTo("error");
+        assertThat(result.timestamp()).isNotNull();
     }
 
 }
