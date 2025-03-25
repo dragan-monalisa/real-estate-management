@@ -8,29 +8,38 @@ import java.time.format.DateTimeParseException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class TimestampPatternTest {
+class TimestampPatternTest {
 
-    private final LocalDateTime dateTime = LocalDateTime.of(2025, 1, 13, 15, 45, 25);
-    private final String actual = "2025-01-13 15:45:25";
+    private static final LocalDateTime dateTime = LocalDateTime.of(2025, 1, 13, 15, 45, 25);
+    private static final String expected = "2025-01-13 15:45:25";
 
     @Test
     void dateTimeFormattingTest() {
-        String formattedDate = dateTime.format(TimestampPattern.FORMATTER);
 
-        assertThat(actual).isEqualTo(formattedDate);
+        // given
+        String result = dateTime.format(TimestampPattern.FORMATTER);
+
+        // then
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
     void dateTimeParsingTest() {
-        LocalDateTime parsedDateTime = LocalDateTime.parse(actual, TimestampPattern.FORMATTER);
 
-        assertThat(dateTime).isEqualTo(parsedDateTime);
+        // given
+        LocalDateTime result = LocalDateTime.parse(expected, TimestampPattern.FORMATTER);
+
+        // then
+        assertThat(result).isEqualTo(dateTime);
     }
 
     @Test
     void invalidDateTimeParsingTest() {
+
+        // given
         String invalidDateTime = "2024/09/03 14:30:45";
 
+        // then
         assertThatThrownBy(() -> LocalDateTime.parse(invalidDateTime, TimestampPattern.FORMATTER))
                 .isInstanceOf(DateTimeParseException.class);
     }
