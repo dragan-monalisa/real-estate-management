@@ -10,7 +10,7 @@ class ErrorDtoTest {
     void errorDtoWithMessageTest() {
 
         // when
-        ErrorDto result = new ErrorDto("error");
+        var result = new ErrorDto("error");
 
         // then
         assertThat(result.message()).isEqualTo("error");
