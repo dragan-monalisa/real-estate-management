@@ -1,37 +1,32 @@
 package com.realestate.component;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EmailBuilderTest {
+class EmailBuilderTest {
 
-    private EmailBuilder emailBuilder;
-
-    private final String name = "Alice Smith";
-    private final String link = "https://example.com/test";
-
-    @BeforeEach
-    public void setup() {
-        emailBuilder = new EmailBuilder();
-    }
+    private final EmailBuilder emailBuilder = new EmailBuilder();
 
     @Test
     void confirmationEmailTest() {
-        String email = emailBuilder.confirmationEmail(name, link);
+        // when
+        String email = emailBuilder.confirmationEmail("Alice Smith", "https://example.com/test");
 
-        assertThat(email).contains(name);
-        assertThat(email).contains(link);
+        // then
+        assertThat(email).contains("Alice Smith");
+        assertThat(email).contains("https://example.com/test");
         assertThat(email).contains("Confirm your email");
     }
 
     @Test
     void forgotPasswordEmailTest() {
-        String email = emailBuilder.forgotPasswordEmail(name, link);
+        // when
+        String email = emailBuilder.forgotPasswordEmail("Alice Smith", "https://example.com/test");
 
-        assertThat(email).contains(name);
-        assertThat(email).contains(link);
+        // then
+        assertThat(email).contains("Alice Smith");
+        assertThat(email).contains("https://example.com/test");
         assertThat(email).contains("Password reset");
     }
 
