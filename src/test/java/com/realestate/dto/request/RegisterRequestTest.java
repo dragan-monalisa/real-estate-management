@@ -29,7 +29,7 @@ class RegisterRequestTest {
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
 
         // then
-        assertThat(violations).hasSize(0);
+        assertThat(violations).isEmpty();
     }
 
     @Test
