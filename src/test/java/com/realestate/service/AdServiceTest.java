@@ -7,7 +7,6 @@ import com.realestate.dto.request.AdRequest;
 import com.realestate.dto.response.AdView;
 import com.realestate.entity.Ad;
 import com.realestate.entity.House;
-import com.realestate.entity.Property;
 import com.realestate.entity.User;
 import com.realestate.repository.AdRepository;
 import com.realestate.repository.PropertyRepository;
@@ -49,25 +48,19 @@ class AdServiceTest {
 
     @Test
     void postAdTest_PropertyNotFound() {
-        // given
-        var request = new AdRequest();
-
-        request.setTitle("title");
-        request.setDescription("description");
-        request.setCategory(AdCategoryEnum.SALE);
-        request.setPrice(BigDecimal.valueOf(10));
 
         // when
         when(propertyRepository.getPropertyById(anyLong())).thenThrow(new EntityNotFoundException("Property with id: 1 not found"));
 
         // then
-        assertThatThrownBy(() -> adService.postAd(new User(), request, 1L))
+        assertThatThrownBy(() -> adService.postAd(new User(), new AdRequest(), 1L))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Property with id: 1 not found");
     }
 
     @Test
     void postAdTest_OK() {
+
         // given
         var request = new AdRequest();
         request.setTitle("title");
@@ -79,13 +72,13 @@ class AdServiceTest {
         realtor.setId(100L);
         realtor.setRole(UserRoleEnum.REALTOR);
 
-        Property property = new House();
+        var property = new House();
         property.setId(1L);
 
-        // when
         when(userRepository.getUserByRole(UserRoleEnum.REALTOR)).thenReturn(List.of(realtor));
         when(propertyRepository.getPropertyById(1L)).thenReturn(property);
 
+        // when
         adService.postAd(new User(), request, 1L);
 
         // then
@@ -103,15 +96,17 @@ class AdServiceTest {
 
     @Test
     void disableAdTest() {
+
         // when
         adService.disableAd(1L);
 
         // then
-        verify(adRepository, times(1)).disable(1L);
+        verify(adRepository).disable(1L);
     }
 
     @Test
     void getMyAdsTest_NullCategory() {
+
         // given
         var ad = new Ad();
         ad.setId(1L);
@@ -119,19 +114,22 @@ class AdServiceTest {
         var user = new User();
         user.setId(1L);
 
-        // when
         when(adRepository.findALlByOwner(user)).thenReturn(List.of(ad));
+
+        // when
         List<AdView> result = adService.getMyAds(user, null);
 
         // then
+        verify(adRepository).findALlByOwner(user);
+        verify(adRepository, never()).findALlByOwnerAndCategory(any(User.class), any(AdCategoryEnum.class));
+
         assertThat(result).hasSize(1);
         assertThat(result.getFirst().getId()).isEqualTo(1L);
-        verify(adRepository, times(1)).findALlByOwner(user);
-        verify(adRepository, never()).findALlByOwnerAndCategory(any(), any());
     }
 
     @Test
     void getMyAdsTest_WithCategory() {
+
         // given
         var ad = new Ad();
         ad.setId(1L);
@@ -140,18 +138,21 @@ class AdServiceTest {
         var user = new User();
         user.setId(1L);
 
-        // when
         when(adRepository.findALlByOwnerAndCategory(user, AdCategoryEnum.SALE)).thenReturn(List.of(ad));
+
+        // when
         List<AdView> result = adService.getMyAds(user, AdCategoryEnum.SALE);
 
         // then
+        verify(adRepository).findALlByOwnerAndCategory(user, AdCategoryEnum.SALE);
+        verify(adRepository, never()).findALlByOwner(any(User.class));
+
         assertThat(result).hasSize(1);
-        verify(adRepository, times(1)).findALlByOwnerAndCategory(user, AdCategoryEnum.SALE);
-        verify(adRepository, never()).findALlByOwner(any());
     }
 
     @Test
     void changeStatusTest() {
+
         // given
         var ad = new Ad();
         ad.setId(1L);
@@ -161,14 +162,16 @@ class AdServiceTest {
         // when
         adService.changeAdStatus(ad.getId(), AdStatusEnum.ACCEPTED);
 
-        // Then
+        // then
+        verify(adRepository).save(ad);
+
         assertThat(ad.getStatus()).isEqualTo(AdStatusEnum.ACCEPTED);
         assertThat(ad.getIsActive()).isTrue();
-        verify(adRepository).save(ad);
     }
 
     @Test
     void getRealtorAdsTest_NullCategory() {
+
         // given
         var ad = new Ad();
         ad.setId(1L);
@@ -176,19 +179,22 @@ class AdServiceTest {
         var realtor = new User();
         realtor.setId(1L);
 
-        // when
         when(adRepository.findAllByRealtor(realtor)).thenReturn(List.of(ad));
+
+        // when
         List<AdView> result = adService.getRealtorAds(realtor, null);
 
         // then
+        verify(adRepository).findAllByRealtor(realtor);
+        verify(adRepository, never()).findAllByRealtorAndCategory(any(User.class), any(AdCategoryEnum.class));
+
         assertThat(result).hasSize(1);
         assertThat(result.getFirst().getId()).isEqualTo(1L);
-        verify(adRepository, times(1)).findAllByRealtor(realtor);
-        verify(adRepository, never()).findAllByRealtorAndCategory(any(), any());
     }
 
     @Test
     void getRealtorAdsTest_WithCategory() {
+
         // given
         var ad = new Ad();
         ad.setId(1L);
@@ -197,14 +203,16 @@ class AdServiceTest {
         var realtor = new User();
         realtor.setId(1L);
 
-        // when
         when(adRepository.findAllByRealtorAndCategory(realtor, AdCategoryEnum.SALE)).thenReturn(List.of(ad));
+
+        // when
         List<AdView> result = adService.getRealtorAds(realtor, AdCategoryEnum.SALE);
 
         // then
+        verify(adRepository).findAllByRealtorAndCategory(realtor, AdCategoryEnum.SALE);
+        verify(adRepository, never()).findAllByRealtor(any(User.class));
+
         assertThat(result).hasSize(1);
-        verify(adRepository, times(1)).findAllByRealtorAndCategory(realtor, AdCategoryEnum.SALE);
-        verify(adRepository, never()).findAllByRealtor(any());
     }
 
 }
