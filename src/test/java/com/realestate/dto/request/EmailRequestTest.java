@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -13,31 +12,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EmailRequestTest {
 
-    private static Validator validator;
-
-    @BeforeAll
-    public static void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
+    private final EmailRequest emailRequest = new EmailRequest();
 
     @Test
     void validEmailTest() {
+
         // given
-        EmailRequest emailRequest = new EmailRequest();
         emailRequest.setEmail("test@test.com");
 
         // when
-        Set<ConstraintViolation<EmailRequest>> violations = validator.validate(emailRequest);
+        Set<ConstraintViolation<EmailRequest>> result = validator.validate(emailRequest);
 
         // then
-        assertThat(violations).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
     void blankEmailTest() {
+
         // given
-        EmailRequest emailRequest = new EmailRequest();
         emailRequest.setEmail("");
 
         // when
@@ -49,13 +44,13 @@ class EmailRequestTest {
     }
 
     @Test
-    public void emailExceedsMaxLengthTest() {
+    void emailExceedsMaxLengthTest() {
+
         // given
-        EmailRequest request = new EmailRequest();
-        request.setEmail("t".repeat(65) + "@email.com");
+        emailRequest.setEmail("t".repeat(65) + "@email.com");
 
         // when
-        Set<ConstraintViolation<EmailRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<EmailRequest>> violations = validator.validate(emailRequest);
 
         // then
         assertThat(violations).hasSize(1);
