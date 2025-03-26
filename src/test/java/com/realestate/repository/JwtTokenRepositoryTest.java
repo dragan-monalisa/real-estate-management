@@ -27,6 +27,9 @@ class JwtTokenRepositoryTest {
 
     @BeforeEach
     void setup() {
+        jwtTokenRepository.deleteAll();
+        userRepository.deleteAll();
+
         user = User.builder()
                 .email("test@email.com")
                 .password("test")
@@ -53,12 +56,17 @@ class JwtTokenRepositoryTest {
 
     @Test
     void deleteAllByUserTest() {
+
+        // given
         List<JwtToken> tokens = jwtTokenRepository.findAll();
         assertThat(tokens).hasSize(2);
 
+        // when
         jwtTokenRepository.deleteAllByUser(user);
 
         tokens = jwtTokenRepository.findAll();
+
+        // then
         assertThat(tokens).isEmpty();
     }
 

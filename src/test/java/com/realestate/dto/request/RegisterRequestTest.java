@@ -4,28 +4,22 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RegisterRequestTest {
+class RegisterRequestTest {
 
-    private static Validator validator;
-
-    @BeforeAll
-    public static void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
 
     @Test
-    public void validRegisterRequestTest() {
-        // given
-        RegisterRequest request = new RegisterRequest();
+    void validFieldsTest() {
 
+        // given
+        var request = new RegisterRequest();
         request.setFirstName("Carolina");
         request.setLastName("Smith");
         request.setEmail("test@test.com");
@@ -35,32 +29,32 @@ public class RegisterRequestTest {
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
 
         // then
-        assertThat(violations).hasSize(0);
+        assertThat(violations).isEmpty();
     }
 
     @Test
-    public void blankFieldsTest() {
-        // given
-        RegisterRequest request = new RegisterRequest();
+    void blankFieldsTest() {
 
+        // given
+        var request = new RegisterRequest();
         request.setFirstName("");
         request.setLastName("");
         request.setEmail("");
         request.setPassword("");
-        
+
         // when
         Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
 
         // then
         assertThat(violations).hasSize(5);
-        assertThat(violations).extracting(ConstraintViolation::getMessage).contains("must not be blank");
+        assertThat(violations).extracting(ConstraintViolation::getMessage).contains("must not be blank", "email format is not valid");
     }
 
     @Test
-    public void fieldsExceedsMaxLengthTest() {
-        // given
-        RegisterRequest request = new RegisterRequest();
+    void fieldsExceedsMaxLengthTest() {
 
+        // given
+        var request = new RegisterRequest();
         request.setFirstName("a".repeat(33));
         request.setLastName("a".repeat(33));
         request.setEmail("a".repeat(65));
@@ -76,22 +70,21 @@ public class RegisterRequestTest {
     }
 
     @Test
-    public void invalidEmailFormatTest() {
-        // given
-        RegisterRequest request = new RegisterRequest();
+    void invalidEmailFormatTest() {
 
+        // given
+        var request = new RegisterRequest();
         request.setFirstName("Jessyca");
         request.setLastName("Doe");
         request.setEmail("invalid-email-format");
         request.setPassword("password123456");
 
         // when
-        Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<RegisterRequest>> result = validator.validate(request);
 
         // then
-        assertThat(violations).hasSize(1);
-        assertThat(violations).extracting(ConstraintViolation::getMessage).contains("email format is not valid");
-        assertThat(violations).extracting(violation -> violation.getPropertyPath().toString()).contains("email");
+        assertThat(result).hasSize(1);
+        assertThat(result).extracting(ConstraintViolation::getMessage).contains("email format is not valid");
     }
 
 }

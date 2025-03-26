@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,8 +46,6 @@ class JwtAuthFilterTest {
     @Mock
     private UserDetails userDetails;
 
-    private final String jwt = "random_jwt";
-
     @BeforeEach
     void setup() {
         SecurityContextHolder.clearContext();
@@ -56,6 +53,7 @@ class JwtAuthFilterTest {
 
     @Test
     void doFilterInternalTest_NoAuthHeader() throws ServletException, IOException {
+
         // given
         when(request.getHeader("Authorization")).thenReturn(null);
 
@@ -63,14 +61,15 @@ class JwtAuthFilterTest {
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        verify(jwtService, never()).extractUsername(any());
         verify(filterChain).doFilter(request, response);
+        verify(jwtService, never()).extractUsername(anyString());
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
     }
 
     @Test
     void doFilterInternalTest_InvalidAuthHeader() throws ServletException, IOException {
+
         // given
         when(request.getHeader("Authorization")).thenReturn("invalid_header");
 
@@ -78,27 +77,28 @@ class JwtAuthFilterTest {
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        verify(jwtService, never()).extractUsername(any());
         verify(filterChain).doFilter(request, response);
+        verify(jwtService, never()).extractUsername(anyString());
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
     }
 
     @Test
     void doFilterInternalTest_ValidTokenAuthenticationSet() throws ServletException, IOException {
+
         // given
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
-        when(jwtService.extractUsername(jwt)).thenReturn("test@email.com");
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + "random_jwt");
+        when(jwtService.extractUsername("random_jwt")).thenReturn("test@email.com");
         when(userDetailsService.loadUserByUsername("test@email.com")).thenReturn(userDetails);
-        when(jwtService.isTokenValid(jwt, userDetails)).thenReturn(true);
+        when(jwtService.isTokenValid("random_jwt", userDetails)).thenReturn(true);
 
         // when
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        verify(jwtService).extractUsername(jwt);
+        verify(jwtService).extractUsername("random_jwt");
         verify(userDetailsService).loadUserByUsername("test@email.com");
-        verify(jwtService).isTokenValid(jwt, userDetails);
+        verify(jwtService).isTokenValid("random_jwt", userDetails);
         verify(filterChain).doFilter(request, response);
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -112,22 +112,24 @@ class JwtAuthFilterTest {
 
     @Test
     void doFilterInternalTest_ValidTokenInvalidAuthentication() throws ServletException, IOException {
+
         // given
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
-        when(jwtService.extractUsername(jwt)).thenReturn("test@email.com");
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + "random_jwt");
+        when(jwtService.extractUsername("random_jwt")).thenReturn("test@email.com");
         when(userDetailsService.loadUserByUsername("test@email.com")).thenReturn(userDetails);
-        when(jwtService.isTokenValid(jwt, userDetails)).thenReturn(false);
+        when(jwtService.isTokenValid("random_jwt", userDetails)).thenReturn(false);
 
         // when
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        verify(jwtService).extractUsername(jwt);
+        verify(jwtService).extractUsername("random_jwt");
         verify(userDetailsService).loadUserByUsername("test@email.com");
-        verify(jwtService).isTokenValid(jwt, userDetails);
+        verify(jwtService).isTokenValid("random_jwt", userDetails);
         verify(filterChain).doFilter(request, response);
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
+
         assertThat(securityContext.getAuthentication()).isNull();
     }
 

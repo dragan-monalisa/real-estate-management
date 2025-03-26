@@ -4,27 +4,22 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResetPasswordRequestTest {
+class ResetPasswordRequestTest {
 
-    private static Validator validator;
-
-    @BeforeAll
-    public static void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
 
     @Test
-    public void validPasswordTest() {
+    void validPasswordTest() {
+
         // given
-        ResetPasswordRequest request = new ResetPasswordRequest();
+        var request = new ResetPasswordRequest();
         request.setPassword("password123456");
 
         // when
@@ -35,9 +30,10 @@ public class ResetPasswordRequestTest {
     }
 
     @Test
-    public void blankPasswordTest() {
+    void blankPasswordTest() {
+
         // given
-        ResetPasswordRequest request = new ResetPasswordRequest();
+        var request = new ResetPasswordRequest();
         request.setPassword("");
 
         // when
@@ -49,9 +45,10 @@ public class ResetPasswordRequestTest {
     }
 
     @Test
-    public void passwordExceedsMaxLengthTest() {
+    void passwordExceedsMaxLengthTest() {
+
         // given
-        ResetPasswordRequest request = new ResetPasswordRequest();
+        var request = new ResetPasswordRequest();
         request.setPassword("a".repeat(65));
 
         // when

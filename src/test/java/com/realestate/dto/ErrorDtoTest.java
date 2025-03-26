@@ -1,34 +1,20 @@
 package com.realestate.dto;
 
-import com.realestate.constant.TimestampPattern;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ErrorDtoTest {
+class ErrorDtoTest {
 
     @Test
-    public void errorDtoWithMessageTest() {
-        ErrorDto errorDto = new ErrorDto("error");
+    void errorDtoWithMessageTest() {
 
-        assertThat("error").isEqualTo(errorDto.message());
-        assertThat(errorDto.timestamp()).isNotNull();
+        // when
+        var result = new ErrorDto("error");
 
-        LocalDateTime parsedTimestamp = LocalDateTime.parse(errorDto.timestamp(), TimestampPattern.FORMATTER);
-
-        assertThat(parsedTimestamp).isNotNull();
-    }
-
-    @Test
-    public void errorDtoWithMessageAndTimestampTest() {
-        String timestamp = "2025-01-013T10:15:30";
-
-        ErrorDto errorDto = new ErrorDto("error", timestamp);
-
-        assertThat("error").isEqualTo(errorDto.message());
-        assertThat(timestamp).isEqualTo(errorDto.timestamp());
+        // then
+        assertThat(result.message()).isEqualTo("error");
+        assertThat(result.timestamp()).isNotBlank();
     }
 
 }

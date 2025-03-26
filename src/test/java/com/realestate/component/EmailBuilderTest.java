@@ -10,24 +10,22 @@ class EmailBuilderTest {
 
     @Test
     void confirmationEmailTest() {
+
         // when
-        String email = emailBuilder.confirmationEmail("Alice Smith", "https://example.com/test");
+        String result = emailBuilder.confirmationEmail("Alice Smith", "https://example.com/test");
 
         // then
-        assertThat(email).contains("Alice Smith");
-        assertThat(email).contains("https://example.com/test");
-        assertThat(email).contains("Confirm your email");
+        assertThat(result).contains("Alice Smith", "https://example.com/test", "Confirm your email");
     }
 
     @Test
     void forgotPasswordEmailTest() {
+
         // when
-        String email = emailBuilder.forgotPasswordEmail("Alice Smith", "https://example.com/test");
+        String result = emailBuilder.forgotPasswordEmail("Alice Smith", "https://example.com/test");
 
         // then
-        assertThat(email).contains("Alice Smith");
-        assertThat(email).contains("https://example.com/test");
-        assertThat(email).contains("Password reset");
+        assertThat(result).contains("Alice Smith", "https://example.com/test", "Password reset");
     }
 
 }

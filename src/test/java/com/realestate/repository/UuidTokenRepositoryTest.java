@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class UuidTokenRepositoryTest {
+class UuidTokenRepositoryTest {
 
     @Autowired
     private UuidTokenRepository uuidTokenRepository;
@@ -32,6 +32,8 @@ public class UuidTokenRepositoryTest {
 
     @BeforeEach
     void setup() {
+        uuidTokenRepository.deleteAll();
+
         user = User.builder()
                 .firstName("FirstName")
                 .lastName("LastName")
@@ -62,6 +64,7 @@ public class UuidTokenRepositoryTest {
 
     @Test
     void findByTokenTest() {
+
         // when
         Optional<UuidToken> uuidToken = uuidTokenRepository.findByToken(validUuidToken.getToken());
 
@@ -71,6 +74,7 @@ public class UuidTokenRepositoryTest {
 
     @Test
     void findAllByUserTest() {
+
         // when
         List<UuidToken> tokens = uuidTokenRepository.findAllByUser(user);
 
@@ -80,6 +84,7 @@ public class UuidTokenRepositoryTest {
 
     @Test
     void getByTokenTest() {
+        
         // when
         Throwable thrown = catchThrowable(() -> uuidTokenRepository.getByToken(invavalidUuidToken.getToken()));
 
