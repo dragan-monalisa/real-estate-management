@@ -19,7 +19,7 @@ public class LandService {
 
     private final LandRepository repository;
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void saveLand(User user, LandRequest request) {
         Land land = ModelMapper.map(request, Land.class);
 
@@ -29,12 +29,12 @@ public class LandService {
         repository.save(land);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void disableLand(Long id) {
         repository.disable(id);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public List<LandView> getMyLands(User user) {
         List<Land> lands = repository.getAllByUser(user);
 

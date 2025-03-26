@@ -16,6 +16,7 @@ import java.util.stream.StreamSupport;
 public class ConstraintValidator {
 
     public static List<ValidationDto> buildErrors(Set<ConstraintViolation<?>> violations) {
+
         return violations.stream()
                 .map(violation -> new ValidationDto(
                         Objects.requireNonNull(
@@ -28,6 +29,7 @@ public class ConstraintValidator {
     }
 
     public static List<ValidationDto> buildErrors(BindingResult bindingResult) {
+
         return bindingResult.getFieldErrors()
                 .stream()
                 .map(fieldError ->

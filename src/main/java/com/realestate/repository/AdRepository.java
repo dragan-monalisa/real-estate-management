@@ -18,15 +18,19 @@ public interface AdRepository extends JpaRepository<Ad, Long>, JpaSpecificationE
 
     int countByRealtorAndIsActiveTrue(User realtor);
 
-    List<Ad> findALlByOwner(User user);
+    Optional<Ad> findAdById(long id);
 
-    List<Ad> findALlByOwnerAndCategory(User user, AdCategoryEnum adCategory);
-
-    List<Ad> findAllByRealtor(User realtor);
-
+    @Query("SELECT a " +
+            "FROM Ad a " +
+            "WHERE a.realtor = :realtor " +
+            "AND (:adCategory IS NULL OR a.category = :adCategory) ")
     List<Ad> findAllByRealtorAndCategory(User realtor, AdCategoryEnum adCategory);
 
-    Optional<Ad> findAdById(long id);
+    @Query("SELECT a " +
+            "FROM Ad a " +
+            "WHERE a.owner = :user " +
+            "AND (:adCategory IS NULL OR a.category = :adCategory) ")
+    List<Ad> findALlByOwnerAndCategory(User user, AdCategoryEnum adCategory);
 
     @Modifying
     @Query("UPDATE Ad " +
