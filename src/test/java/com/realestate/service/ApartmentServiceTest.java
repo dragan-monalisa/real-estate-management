@@ -18,7 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApartmentServiceTest {
@@ -34,6 +35,7 @@ class ApartmentServiceTest {
 
     @Test
     void saveApartmentTest() {
+
         // given
         var request = new ApartmentRequest();
         request.setBuildYear(2020);
@@ -48,9 +50,10 @@ class ApartmentServiceTest {
 
         // when
         apartmentService.saveApartment(user, request);
-        verify(apartmentRepository, times(1)).save(apartmentArgCaptor.capture());
 
         // then
+        verify(apartmentRepository).save(apartmentArgCaptor.capture());
+
         assertThat(apartmentArgCaptor.getValue()).satisfies(apartment -> {
             assertThat(apartment.getBuildYear()).isEqualTo(2020);
             assertThat(apartment.getRoomsNumber()).isEqualTo(2);
@@ -62,15 +65,17 @@ class ApartmentServiceTest {
 
     @Test
     void disableApartmentTest() {
+
         //when
         apartmentService.disableApartment(1L);
 
         // then
-        verify(apartmentRepository, times(1)).disable(1L);
+        verify(apartmentRepository).disable(1L);
     }
 
     @Test
     void getMyApartmentsTest() {
+
         // given
         var user = new User();
         user.setId(1L);
@@ -78,8 +83,9 @@ class ApartmentServiceTest {
         var apartment = new Apartment();
         apartment.setId(1L);
 
-        // when
         when(apartmentRepository.getAllByUser(user)).thenReturn(List.of(apartment));
+
+        // when
         List<ApartmentView> result = apartmentService.getMyApartments(user);
 
         // then
