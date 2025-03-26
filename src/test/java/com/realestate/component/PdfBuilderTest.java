@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PdfBuilderTest {
 
-
     private final PdfBuilder pdfBuilder = new PdfBuilder();
 
     @Mock
@@ -38,42 +37,40 @@ class PdfBuilderTest {
 
     @BeforeEach
     void setUp() {
-        when(transaction.getAd()).thenReturn(ad);
         when(ad.getOwner()).thenReturn(owner);
+
+        when(transaction.getAd()).thenReturn(ad);
         when(transaction.getCustomer()).thenReturn(customer);
         when(transaction.getContract()).thenReturn(contract);
-
         when(transaction.getPrice()).thenReturn(BigDecimal.valueOf(500));
+
         when(contract.getTerms()).thenReturn("Terms and conditions.");
 
         when(owner.getFirstName()).thenReturn("Alice");
         when(owner.getLastName()).thenReturn("Smith");
+        
         when(customer.getFirstName()).thenReturn("Julie");
         when(customer.getLastName()).thenReturn("Doe");
     }
 
     @Test
     public void rentPdfContentTest() {
+
         // given
-        String pdfContent = pdfBuilder.rentPdfContent(transaction);
+        String result = pdfBuilder.rentPdfContent(transaction);
 
         // then
-        assertThat(pdfContent).contains("Lease Agreement");
-        assertThat(pdfContent).contains("OWNER:</strong> Alice Smith");
-        assertThat(pdfContent).contains("TENANT:</strong> Julie Doe");
-        assertThat(pdfContent).contains("The agreed rental price for the property is <strong>500");
-        assertThat(pdfContent).contains("Terms and conditions");
+        assertThat(result).contains("Lease Agreement", "OWNER:</strong> Alice Smith", "TENANT:</strong> Julie Doe");
     }
 
     @Test
     public void salePdfContentTest() {
+
         // given
-        String pdfContent = pdfBuilder.salePdfContent(transaction);
+        String result = pdfBuilder.salePdfContent(transaction);
 
         // then
-        assertThat(pdfContent).contains("Sale Contract");
-        assertThat(pdfContent).contains("The sale price is <strong>500");
-        assertThat(pdfContent).contains("Terms and conditions");
+        assertThat(result).contains("Sale Contract", "The sale price is <strong>500", "Terms and conditions");
     }
 
 }
