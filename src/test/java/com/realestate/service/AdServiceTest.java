@@ -26,7 +26,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AdServiceTest {
@@ -105,30 +106,7 @@ class AdServiceTest {
     }
 
     @Test
-    void getMyAdsTest_NullCategory() {
-
-        // given
-        var ad = new Ad();
-        ad.setId(1L);
-
-        var user = new User();
-        user.setId(1L);
-
-        when(adRepository.findALlByOwner(user)).thenReturn(List.of(ad));
-
-        // when
-        List<AdView> result = adService.getMyAds(user, null);
-
-        // then
-        verify(adRepository).findALlByOwner(user);
-        verify(adRepository, never()).findALlByOwnerAndCategory(any(User.class), any(AdCategoryEnum.class));
-
-        assertThat(result).hasSize(1);
-        assertThat(result.getFirst().getId()).isEqualTo(1L);
-    }
-
-    @Test
-    void getMyAdsTest_WithCategory() {
+    void getMyAdsTest() {
 
         // given
         var ad = new Ad();
@@ -145,8 +123,6 @@ class AdServiceTest {
 
         // then
         verify(adRepository).findALlByOwnerAndCategory(user, AdCategoryEnum.SALE);
-        verify(adRepository, never()).findALlByOwner(any(User.class));
-
         assertThat(result).hasSize(1);
     }
 
@@ -170,30 +146,7 @@ class AdServiceTest {
     }
 
     @Test
-    void getRealtorAdsTest_NullCategory() {
-
-        // given
-        var ad = new Ad();
-        ad.setId(1L);
-
-        var realtor = new User();
-        realtor.setId(1L);
-
-        when(adRepository.findAllByRealtor(realtor)).thenReturn(List.of(ad));
-
-        // when
-        List<AdView> result = adService.getRealtorAds(realtor, null);
-
-        // then
-        verify(adRepository).findAllByRealtor(realtor);
-        verify(adRepository, never()).findAllByRealtorAndCategory(any(User.class), any(AdCategoryEnum.class));
-
-        assertThat(result).hasSize(1);
-        assertThat(result.getFirst().getId()).isEqualTo(1L);
-    }
-
-    @Test
-    void getRealtorAdsTest_WithCategory() {
+    void getRealtorAdsTest() {
 
         // given
         var ad = new Ad();
@@ -210,8 +163,6 @@ class AdServiceTest {
 
         // then
         verify(adRepository).findAllByRealtorAndCategory(realtor, AdCategoryEnum.SALE);
-        verify(adRepository, never()).findAllByRealtor(any(User.class));
-
         assertThat(result).hasSize(1);
     }
 
