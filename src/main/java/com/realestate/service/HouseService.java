@@ -19,7 +19,7 @@ public class HouseService {
 
     private final HouseRepository repository;
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void saveHouse(User user, HouseRequest request) {
         House house = ModelMapper.map(request, House.class);
 
@@ -29,12 +29,12 @@ public class HouseService {
         repository.save(house);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void disableHouse(Long id) {
         repository.disable(id);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public List<HouseView> getMyHouses(User user) {
         List<House> houses = repository.getAllByUser(user);
 

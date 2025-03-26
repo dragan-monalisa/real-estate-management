@@ -50,13 +50,7 @@ public class AdService {
 
     @PreAuthorize("hasAuthority('USER')")
     public List<AdView> getMyAds(User user, AdCategoryEnum category) {
-        List<Ad> ads;
-
-        if (category == null) {
-            ads = adRepository.findALlByOwner(user);
-        } else {
-            ads = adRepository.findALlByOwnerAndCategory(user, category);
-        }
+        List<Ad> ads = adRepository.findALlByOwnerAndCategory(user, category);
 
         return ModelMapper.mapAll(ads, AdView.class);
     }
@@ -75,13 +69,7 @@ public class AdService {
 
     @PreAuthorize("hasAnyAuthority('REALTOR', 'ADMIN')")
     public List<AdView> getRealtorAds(User realtor, AdCategoryEnum category) {
-        List<Ad> ads;
-
-        if (category == null) {
-            ads = adRepository.findAllByRealtor(realtor);
-        } else {
-            ads = adRepository.findAllByRealtorAndCategory(realtor, category);
-        }
+        List<Ad> ads = adRepository.findAllByRealtorAndCategory(realtor, category);
 
         return ModelMapper.mapAll(ads, AdView.class);
     }
@@ -97,12 +85,8 @@ public class AdService {
         List<User> realtors = userRepository.getUserByRole(UserRoleEnum.REALTOR);
 
         return realtors.stream()
-                .min(Comparator.comparingInt(this::countActiveAdsForRealtor))
+                .min(Comparator.comparingInt(adRepository::countRealtorAds))
                 .orElseThrow(() -> new BusinessException("No realtors available"));
-    }
-
-    private int countActiveAdsForRealtor(User realtor) {
-        return adRepository.countRealtorAds(realtor);
     }
 
 }

@@ -19,7 +19,7 @@ public class ApartmentService {
 
     private final ApartmentRepository repository;
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void saveApartment(User user, ApartmentRequest request) {
         Apartment apartment = ModelMapper.map(request, Apartment.class);
 
@@ -29,13 +29,12 @@ public class ApartmentService {
         repository.save(apartment);
     }
 
-
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void disableApartment(Long id) {
         repository.disable(id);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public List<ApartmentView> getMyApartments(User user) {
         List<Apartment> apartments = repository.getAllByUser(user);
 

@@ -20,7 +20,7 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final AdRepository adRepository;
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void addToFavorite(User user, Long adId) {
         Ad ad = adRepository.getAdById(adId);
 
@@ -32,7 +32,7 @@ public class FavoriteService {
         favoriteRepository.save(favorite);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public void removeFavorite(User user, Long adId) {
         Ad ad = adRepository.getAdById(adId);
         Favorite favorite = favoriteRepository.getFavoriteByAdAndUser(ad, user);
@@ -40,7 +40,7 @@ public class FavoriteService {
         favoriteRepository.delete(favorite);
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public List<FavoriteView> getFavorites(User user) {
         List<Favorite> favorites = favoriteRepository.getAllByUser(user);
 
